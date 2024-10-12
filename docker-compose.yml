@@ -7,10 +7,14 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: laravel_db
-      MYSQL_USER: user
-      MYSQL_PASSWORD: user_password
+      MYSQL_USER: root
+      MYSQL_PASSWORD: secret
+    ports:
+      - "3307:3306"
     volumes:
       - ./dbdata:/var/lib/mysql
+    networks:
+      - mynetwork
   backend:
     image: php:8.2-fpm
     container_name: backend
@@ -21,6 +25,8 @@ services:
       - ./backend:/var/www/html
     depends_on:
       - database
+    command: >
+      sh -c "apt-get update && apt-get install -y default-mysql-client && php-fpm"
     networks:
       - mynetwork
   app:
