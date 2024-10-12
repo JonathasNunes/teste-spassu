@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                sh 'docker-compose exec backend composer install'
+                sh 'docker-compose exec backend php artisan migrate'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'docker-compose exec backend php artisan test'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying...'
+                // Configurar para fazer deploy em ambiente de produção
+            }
+        }
+    }
+}

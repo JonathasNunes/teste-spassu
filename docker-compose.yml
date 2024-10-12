@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  database: 
+    image: mysql:latest
+    container_name: database
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: laravel_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user_password
+    volumes:
+      - ./dbdata:/var/lib/mysql
+  backend:
+    image: php:8.2-fpm
+    container_name: backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend:/var/www/html
+    depends_on:
+      - database
+    networks:
+      - mynetwork
+  app:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: app_container
+    ports:
+      - '4200:4200'
+    stdin_open: true
+    tty: true
+    networks:
+      - mynetwork
+    depends_on:
+      - backend
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    user: root
+    environment:
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
+    volumes:
+      - ./jenkins:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "8080:8080"
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge
