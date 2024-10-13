@@ -13,7 +13,7 @@ class CreateAutorTable extends Migration
     {
         Schema::create('autor', function (Blueprint $table) {
             $table->id('CodAu');  // Chave primária
-            $table->string('Nome', 40);
+            $table->string('Nome', 40)->nullable(false); ;
             $table->timestamps();
         });
     }

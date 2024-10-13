@@ -13,7 +13,7 @@ class CreateAssuntoTable extends Migration
     {
         Schema::create('assunto', function (Blueprint $table) {
             $table->id('codAs');  // Chave primária
-            $table->string('Descricao', 40);
+            $table->string('Descricao', 40)->nullable(false); ;
             $table->timestamps();
         });
     }

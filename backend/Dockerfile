@@ -15,6 +15,18 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Instala as extensões necessárias
 RUN docker-php-ext-install pdo pdo_mysql
 
+# O Xdebug é uma extensão que fornece funcionalidades de depuração e geração de relatórios de cobertura de código.
+# RUN if ! php -m | grep -q 'xdebug'; then \
+#         pecl install xdebug && \
+#         docker-php-ext-enable xdebug; \
+#     fi
+
+# # Ativar Xdebug (presumindo que já está instalado)
+# RUN docker-php-ext-enable xdebug
+
+# # Copia as configurações do Xdebug
+# COPY ./docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/
+
 # Copia o arquivo de configuração do PHP (opcional)
 # COPY ./php.ini /usr/local/etc/php/
 

@@ -13,8 +13,8 @@ class CreateLivroTable extends Migration
     {
         Schema::create('livro', function (Blueprint $table) {
             $table->id('Codl');  // Chave primária
-            $table->string('Titulo', 40);
-            $table->string('Editora', 40);
+            $table->string('Titulo', 40)->nullable(false); ;
+            $table->string('Editora', 40)->nullable(false); ;
             $table->integer('Edicao');
             $table->string('AnoPublicacao', 4);
             $table->timestamps();
