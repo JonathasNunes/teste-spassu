@@ -13,7 +13,7 @@ class AutorDAO
 
     public function buscarPorId($id)
     {
-        return Autor::find($id);
+        return Autor::where('CodAu', $id)->first();
     }
 
     public function atualizar($id, array $data)
@@ -31,5 +31,10 @@ class AutorDAO
     public function listar()
     {
         return Autor::all();
+    }
+
+    public function buscarPorNome($nome)
+    {
+        return Autor::where('Nome', 'LIKE', "%{$nome}%")->get();
     }
 }

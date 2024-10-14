@@ -13,7 +13,7 @@ class LivroDAO
 
     public function buscarPorId(int $id): ?Livro
     {
-        return Livro::find($id);
+        return Livro::where('Codl', $id)->first();
     }
 
     public function atualizar(int $id, array $data): bool

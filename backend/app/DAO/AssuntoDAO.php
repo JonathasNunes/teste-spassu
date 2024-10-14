@@ -13,7 +13,7 @@ class AssuntoDAO
 
     public function buscarPorId($id)
     {
-        return Assunto::find($id);
+        return Assunto::where('codAs', $id)->first();
     }
 
     public function atualizar($id, array $data)
