@@ -26,6 +26,7 @@ class LivroRequest extends FormRequest
             'Editora' => 'required|string|max:40',
             'Edicao' => 'nullable|integer|min:1',
             'AnoPublicacao' => 'nullable|string|size:4|regex:/^[0-9]{4}$/',
+            'preco' => 'nullable|numeric',
         ];
     }
 
@@ -40,6 +41,7 @@ class LivroRequest extends FormRequest
             'Edicao.min' => 'O campo Edição deve ser maior ou igual a 1.',
             'AnoPublicacao.size' => 'O campo Ano de Publicação deve ter 4 dígitos.',
             'AnoPublicacao.regex' => 'O campo Ano de Publicação deve ser um ano válido.',
+            'preco.numeric' => 'O campo Preço deve ser numérico',
         ];
     }
 }

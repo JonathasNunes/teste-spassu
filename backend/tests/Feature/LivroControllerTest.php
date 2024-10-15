@@ -10,6 +10,7 @@ use App\DAO\LivroDAO;
 use App\Models\Assunto;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 
 class LivroControllerTest extends TestCase
 {
@@ -506,5 +507,37 @@ class LivroControllerTest extends TestCase
         ]);
     }
 
+    /** @test */
+    public function deve_criar_livro_com_preco_com_sucesso()
+    {
+        $dadosLivro = [
+            'Titulo' => 'Livro com Preço',
+            'Editora' => 'Editora Teste',
+            'Edicao' => 1,
+            'AnoPublicacao' => '2021',
+            'preco' => 59.90, // Preço definido
+        ];
 
+        $response = $this->postJson('/livros', $dadosLivro);
+
+        $response->assertStatus(201);
+        $this->assertDatabaseHas('livro', ['preco' => 59.90]);
+    }
+
+    /** @test */
+    public function deve_criar_livro_sem_preco_com_sucesso()
+    {
+        $dadosLivro = [
+            'Titulo' => 'Livro Sem Preço',
+            'Editora' => 'Editora X',
+            'Edicao' => 2,
+            'AnoPublicacao' => '2020',
+            'preco' => null, // Preço não informado
+        ];
+
+        $response = $this->postJson('/livros', $dadosLivro);
+
+        $response->assertStatus(201);
+        $this->assertDatabaseHas('livro', ['preco' => null]);
+    }
 }

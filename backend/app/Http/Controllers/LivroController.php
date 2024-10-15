@@ -148,4 +148,13 @@ class LivroController extends Controller
             return response()->json(['error' => 'Erro ao associar livro ao Autor: ' . $e->getMessage()], 500);
         }
     }
+
+    /**
+     * Gera o relatório de livros agrupados por autor e assunto.
+     */
+    public function gerarRelatorio()
+    {
+        $dadosRelatorio = $this->livroDAO->obterRelatorio();
+        return response()->json($dadosRelatorio, 200);
+    }
 }

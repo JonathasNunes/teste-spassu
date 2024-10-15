@@ -73,4 +73,6 @@ Route::prefix('livros')->group(function () {
     Route::post('/{id}/autores', [LivroController::class, 'associarAutor']);
     
     Route::delete('/{id}/autor/{autorId}', [LivroController::class, 'desassociarAutor']);
+
+    Route::get('/relatorio', [LivroController::class, 'gerarRelatorio']);
 });

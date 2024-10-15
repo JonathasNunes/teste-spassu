@@ -3,6 +3,7 @@
 namespace App\DAO;
 
 use App\Models\Livro;
+use Illuminate\Support\Facades\DB;
 
 class LivroDAO
 {
@@ -37,5 +38,13 @@ class LivroDAO
     public function listar(): array
     {
         return Livro::all()->toArray();
+    }
+
+    /**
+     * Obtém os dados da view de relatório de livros.
+     */
+    public function obterRelatorio()
+    {
+        return DB::table('view_relatorio_livros')->get();
     }
 }

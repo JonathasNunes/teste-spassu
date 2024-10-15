@@ -17,6 +17,7 @@ class Livro extends Model
         'Editora',
         'Edicao',
         'AnoPublicacao',
+        'preco',
     ];
 
     public $timestamps = true; // Habilitar timestamps se necessário
