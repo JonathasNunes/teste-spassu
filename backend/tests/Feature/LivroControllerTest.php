@@ -7,10 +7,8 @@ use App\DAO\AutorDAO;
 use App\DAO\LivroAssuntoDAO;
 use App\DAO\LivroAutorDAO;
 use App\DAO\LivroDAO;
-use App\Models\Assunto;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\DB;
 
 class LivroControllerTest extends TestCase
 {
