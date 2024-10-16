@@ -1,48 +1,34 @@
-version: '3.8'
+version: '3'
 
 services:
   database: 
     image: mysql:latest
     container_name: database
+    ports:
+      - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: laravel_db
       MYSQL_USER: root
       MYSQL_PASSWORD: secret
-    ports:
-      - "3307:3306"
     volumes:
       - ./dbdata:/var/lib/mysql
-    networks:
-      - mynetwork
   backend:
-    image: php:8.2-fpm
+    build: ./backend
     container_name: backend
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    ports:
+      - '8000:8000'
     volumes:
       - ./backend:/var/www/html
       - ./storage:/var/www/html/storage  # Adiciona este volume para acessar o relatório
     depends_on:
       - database
-    command: >
-      sh -c "apt-get update && apt-get install -y default-mysql-client && php-fpm"
-    networks:
-      - mynetwork
-  app:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: app_container
+  frontend:
+    build: ./frontend
+    container_name: frontend
     ports:
-      - '4200:4200'
+      - '3000:3000'
     stdin_open: true
     tty: true
-    networks:
-      - mynetwork
-    depends_on:
-      - backend
   jenkins:
     image: jenkins/jenkins:lts
     container_name: jenkins
@@ -54,9 +40,3 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - "8080:8080"
-    networks:
-      - mynetwork
-
-networks:
-  mynetwork:
-    driver: bridge

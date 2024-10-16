@@ -1,0 +1,16 @@
+.container {
+    margin-top: 50px;
+}
+  
+table {
+    width: 100%;
+}
+  
+.modal-body {
+    padding: 20px;
+}
+  
+.modal-title {
+    font-weight: bold;
+}
+  
