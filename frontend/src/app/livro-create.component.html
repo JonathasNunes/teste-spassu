@@ -1,0 +1,51 @@
+<!-- book-create.component.html -->
+<div class="container mt-4">
+    <h2>Cadastrar Livro</h2>
+    
+    <form [formGroup]="bookForm" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label for="autorId" class="form-label">Autor</label>
+        <select id="autorId" class="form-select" formControlName="autorId">
+          <option value="" disabled selected>Selecione um autor</option>
+          <option *ngFor="let author of authors" [value]="author.id">{{ author.nome }}</option>
+        </select>
+      </div>
+  
+      <div class="mb-3">
+        <label for="generoId" class="form-label">Gênero</label>
+        <select id="generoId" class="form-select" formControlName="generoId">
+          <option value="" disabled selected>Selecione um gênero</option>
+          <option *ngFor="let subject of subjects" [value]="subject.id">{{ subject.nome }}</option>
+        </select>
+      </div>
+  
+      <div class="mb-3">
+        <label for="titulo" class="form-label">Título</label>
+        <input type="text" class="form-control" id="titulo" formControlName="titulo">
+      </div>
+  
+      <div class="mb-3">
+        <label for="editora" class="form-label">Editora</label>
+        <input type="text" class="form-control" id="editora" formControlName="editora">
+      </div>
+  
+      <div class="mb-3">
+        <label for="edicao" class="form-label">Edição</label>
+        <input type="number" class="form-control" id="edicao" formControlName="edicao" min="1">
+      </div>
+  
+      <div class="mb-3">
+        <label for="anoPublicacao" class="form-label">Ano de Publicação</label>
+        <input type="number" class="form-control" id="anoPublicacao" formControlName="anoPublicacao" min="1900" [max]="new Date().getFullYear()">
+      </div>
+  
+      <div class="mb-3">
+        <label for="preco" class="form-label">Preço</label>
+        <input type="text" class="form-control" id="preco" formControlName="preco" (focus)="precoMask()" (blur)="removeMask()">
+        <small class="text-muted">Formato: R$ 0,00</small>
+      </div>
+  
+      <button type="submit" class="btn btn-success">Salvar</button>
+    </form>
+  </div>
+  
