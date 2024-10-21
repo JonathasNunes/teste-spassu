@@ -1,6 +1,7 @@
 // livro.component.ts
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Livro } from './livro.model';
 import { AutorService } from './autor.service';
 import { Autor } from './autor.model';
@@ -17,6 +18,7 @@ export class LivroCreateComponent implements OnInit {
   assuntos: Assunto[] = [];
 
   constructor(
+    private http: HttpClient,
     private fb: FormBuilder,
     private autorService: AutorService,
     private assuntoService: AssuntoService
@@ -99,6 +101,19 @@ export class LivroCreateComponent implements OnInit {
     if (this.livroForm.valid) {
       const livro: Livro = this.livroForm.value;
    
+      console.log(' --- LIVRO ANTES DO ENVIO --- ');
+      console.log(livro);
+
+      const headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      });
+  
+      this.http.post('http://127.0.0.1:8000/api/livros', livro, { headers })
+        .subscribe(response => {
+          console.log('Livro cadastrado com sucesso:', response);
+          // this.fecharModal('modalAssunto');
+        });
     }
   }
 }

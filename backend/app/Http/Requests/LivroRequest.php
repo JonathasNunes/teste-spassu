@@ -26,6 +26,8 @@ class LivroRequest extends FormRequest
             'Editora' => 'required|string|max:40',
             'Edicao' => 'nullable|integer|min:1',
             'AnoPublicacao' => 'nullable|string|size:4|regex:/^[0-9]{4}$/',
+            'Autor_CodAu' => 'nullable|integer',
+            'Assunto_codAs' => 'nullable|integer',
             'preco' => 'nullable|numeric',
         ];
     }
@@ -42,6 +44,8 @@ class LivroRequest extends FormRequest
             'AnoPublicacao.size' => 'O campo Ano de Publicação deve ter 4 dígitos.',
             'AnoPublicacao.regex' => 'O campo Ano de Publicação deve ser um ano válido.',
             'preco.numeric' => 'O campo Preço deve ser numérico',
+            'Autor_CodAu.integer' => 'O campo Autor deve ser um número inteiro.',
+            'Assunto_codAs.integer' => 'O campo Assunto deve ser um número inteiro.',
         ];
     }
 }

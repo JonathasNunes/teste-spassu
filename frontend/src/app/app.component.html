@@ -2,6 +2,15 @@
   <!-- Centralizando o título e adicionando estilo -->
   <h2 class="text-center mb-4">Relatório de Livros</h2>
 
+  <!-- Botões centralizados e com espaçamento -->
+  <div class="d-flex justify-content-center mt-3 gap-3">
+    <button class="btn btn-primary" (click)="openModal('autor')">Cadastrar Autor</button>
+    <button class="btn btn-secondary" (click)="openModal('assunto')">Cadastrar Assunto</button>
+    <button class="btn btn-info" (click)="openLivroModal()">Cadastrar Livro</button>
+  </div>
+
+  <div class="d-flex justify-content-center mt-3 gap-3"></div>
+
   <!-- Mensagem de carregamento -->
   <div *ngIf="loading" class="alert alert-info text-center">Carregando...</div>
 
@@ -39,13 +48,6 @@
         </tr>
       </tbody>
     </table>
-  </div>
-
-  <!-- Botões centralizados e com espaçamento -->
-  <div class="d-flex justify-content-center mt-3 gap-3">
-    <button class="btn btn-primary" (click)="openModal('autor')">Cadastrar Autor</button>
-    <button class="btn btn-secondary" (click)="openModal('assunto')">Cadastrar Assunto</button>
-    <button class="btn btn-info" (click)="openLivroModal()">Cadastrar Livro</button>
   </div>
 </div>
 
