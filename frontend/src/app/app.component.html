@@ -45,6 +45,7 @@
   <div class="d-flex justify-content-center mt-3 gap-3">
     <button class="btn btn-primary" (click)="openModal('autor')">Cadastrar Autor</button>
     <button class="btn btn-secondary" (click)="openModal('assunto')">Cadastrar Assunto</button>
+    <button class="btn btn-info" (click)="openLivroModal()">Cadastrar Livro</button>
   </div>
 </div>
 
@@ -85,6 +86,21 @@
           </div>
           <button type="submit" class="btn btn-success w-100">Salvar</button>
         </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Livro -->
+<div class="modal fade" id="modalLivro" tabindex="-1" aria-labelledby="modalLivroLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLivroLabel">Cadastrar Livro</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <app-livro-create></app-livro-create> <!-- Componente do cadastro do livro -->
       </div>
     </div>
   </div>

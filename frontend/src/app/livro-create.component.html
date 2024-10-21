@@ -1,51 +1,75 @@
-<!-- book-create.component.html -->
+<!-- livro-create.component.html -->
 <div class="container mt-4">
-    <h2>Cadastrar Livro</h2>
+  <form [formGroup]="livroForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="Autor_CodAu" class="form-label">Autor</label>
+      <select id="Autor_CodAu" class="form-select" formControlName="Autor_CodAu">
+        <option value="" disabled selected>Selecione um autor</option>
+        <option *ngFor="let autor of autores" [value]="autor.CodAu">{{ autor.Nome }}</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="Assunto_codAs" class="form-label">Gênero</label>
+      <select id="Assunto_codAs" class="form-select" formControlName="Assunto_codAs">
+        <option value="" disabled selected>Selecione um gênero</option>
+        <option *ngFor="let assunto of assuntos" [value]="assunto.codAs">{{ assunto.Descricao }}</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="Titulo" class="form-label">Título</label>
+      <input type="text" class="form-control" id="Titulo" formControlName="Titulo">
+    </div>
+
+    <div class="mb-3">
+      <label for="Editora" class="form-label">Editora</label>
+      <input type="text" class="form-control" id="Editora" formControlName="Editora">
+    </div>
+
+    <div class="mb-3">
+      <label for="Edicao" class="form-label">Edição</label>
+      <input type="number" class="form-control" id="Edicao" formControlName="Edicao" min="1" (keydown)="somenteNumero($event)">
+    </div>
+
+    <div class="mb-3">
+      <label for="AnoPublicacao" class="form-label">Ano de Publicação</label>
+      <input 
+        type="text" 
+        class="form-control" 
+        id="AnoPublicacao" 
+        formControlName="AnoPublicacao" 
+        (keydown)="somenteNumero($event)" 
+        (blur)="checkAnoPublicacao()"
+        maxlength="4"
+      >
+      <small *ngIf="livroForm.get('AnoPublicacao')?.errors?.minlength && livroForm.get('AnoPublicacao')?.touched" class="text-danger">
+        O ano deve ter 4 dígitos.
+      </small>
+      <small *ngIf="livroForm.get('AnoPublicacao')?.errors?.max && livroForm.get('AnoPublicacao')?.touched" class="text-danger">
+        O ano deve ser menor ou igual ao ano atual.
+      </small>
+      <small *ngIf="livroForm.get('AnoPublicacao')?.errors?.min && livroForm.get('AnoPublicacao')?.touched" class="text-danger">
+        O ano deve ser maior ou igual a 1000.
+      </small>
+    </div>
+
+    <div class="mb-3">
+      <label for="preco" class="form-label">Preço</label>
+      <input 
+        type="text" 
+        class="form-control" 
+        id="preco" 
+        formControlName="preco" 
+        currencyMask
+        [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+        (keydown)="somenteNumero($event)" 
+        (blur)="checkPreco()"
+      >
+      <small class="text-muted">Formato: R$ 0,00</small>
+    </div>
     
-    <form [formGroup]="bookForm" (ngSubmit)="onSubmit()">
-      <div class="mb-3">
-        <label for="autorId" class="form-label">Autor</label>
-        <select id="autorId" class="form-select" formControlName="autorId">
-          <option value="" disabled selected>Selecione um autor</option>
-          <option *ngFor="let author of authors" [value]="author.id">{{ author.nome }}</option>
-        </select>
-      </div>
-  
-      <div class="mb-3">
-        <label for="generoId" class="form-label">Gênero</label>
-        <select id="generoId" class="form-select" formControlName="generoId">
-          <option value="" disabled selected>Selecione um gênero</option>
-          <option *ngFor="let subject of subjects" [value]="subject.id">{{ subject.nome }}</option>
-        </select>
-      </div>
-  
-      <div class="mb-3">
-        <label for="titulo" class="form-label">Título</label>
-        <input type="text" class="form-control" id="titulo" formControlName="titulo">
-      </div>
-  
-      <div class="mb-3">
-        <label for="editora" class="form-label">Editora</label>
-        <input type="text" class="form-control" id="editora" formControlName="editora">
-      </div>
-  
-      <div class="mb-3">
-        <label for="edicao" class="form-label">Edição</label>
-        <input type="number" class="form-control" id="edicao" formControlName="edicao" min="1">
-      </div>
-  
-      <div class="mb-3">
-        <label for="anoPublicacao" class="form-label">Ano de Publicação</label>
-        <input type="number" class="form-control" id="anoPublicacao" formControlName="anoPublicacao" min="1900" [max]="new Date().getFullYear()">
-      </div>
-  
-      <div class="mb-3">
-        <label for="preco" class="form-label">Preço</label>
-        <input type="text" class="form-control" id="preco" formControlName="preco" (focus)="precoMask()" (blur)="removeMask()">
-        <small class="text-muted">Formato: R$ 0,00</small>
-      </div>
-  
-      <button type="submit" class="btn btn-success">Salvar</button>
-    </form>
-  </div>
-  
+
+    <button type="submit" class="btn btn-success">Salvar</button>
+  </form>
+</div>

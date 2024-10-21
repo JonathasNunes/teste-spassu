@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import * as bootstrap from 'bootstrap';
 import { RelatorioService } from './relatorio.service';
 import { Relatorio } from './relatorio.model';
+import { LivroCreateComponent } from './livro-create.component';
 
 @Component({
   selector: 'app-root',
@@ -15,13 +16,18 @@ export class AppComponent implements OnInit {
   loading: boolean = false;
   errorMessage: string = '';
 
+  @ViewChild(LivroCreateComponent) livroCreateComponent!: LivroCreateComponent;
+
   title = 'Autores e seus Livros';
 
   // Dados dos formulários
   autor = { Nome: '' };
   assunto = { Descricao: '' };
 
-  constructor(private http: HttpClient, private relatorioService: RelatorioService) { }
+  constructor(
+    private http: HttpClient, 
+    private relatorioService: RelatorioService
+  ) { }
 
   ngOnInit(): void {
     this.fetchRelatorios();
@@ -47,11 +53,8 @@ export class AppComponent implements OnInit {
 
   // Métodos de cadastro
   cadastrarAutor() {
-    console.log('Cadastrando Autor:', this.autor.Nome);
-    // // Lógica de cadastro pode ser feita aqui (chamada para API, etc.)
-    // this.fecharModal('modalAutor');
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json',  // Ajuste para seu backend
+      'Content-Type': 'application/json',
       'Accept': 'application/json',
     });
 
@@ -63,11 +66,8 @@ export class AppComponent implements OnInit {
   }
 
   cadastrarAssunto() {
-    console.log('Cadastrando Assunto:', this.assunto.Descricao);
-    // Lógica de cadastro pode ser feita aqui (chamada para API, etc.)
-    // this.fecharModal('modalAssunto');
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json',  // Ajuste para seu backend
+      'Content-Type': 'application/json',
       'Accept': 'application/json',
     });
 
@@ -76,6 +76,17 @@ export class AppComponent implements OnInit {
         console.log('Assunto cadastrado com sucesso:', response);
         this.fecharModal('modalAssunto');
       });
+  }
+
+  // Abrir modal de Livro
+  openLivroModal() {
+    const modal = document.getElementById('modalLivro');
+    if (modal) {
+      const modalBootstrap = new bootstrap.Modal(modal);
+      modalBootstrap.show();
+      this.livroCreateComponent.loadAutores(); // Chama o método diretamente
+      this.livroCreateComponent.loadAssuntos();
+    }
   }
 
   // Abrir modal
@@ -94,6 +105,7 @@ export class AppComponent implements OnInit {
     if (modal) {
       const modalBootstrap = bootstrap.Modal.getInstance(modal);
       modalBootstrap?.hide();
+      this.fetchRelatorios();
     }
   }
 }

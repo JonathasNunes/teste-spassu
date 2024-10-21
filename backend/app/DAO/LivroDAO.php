@@ -27,7 +27,7 @@ class LivroDAO
             if (!isset($data['Titulo']) || !isset($data['Editora'])) {
                 throw new \Exception('Faltando dados obrigatórios: Titulo ou Editora');
             }
-            // Criar o livro
+
             // Dados obrigatórios
             $livroData = [
                 'Titulo' => $data['Titulo'],
@@ -43,15 +43,7 @@ class LivroDAO
                 return !is_null($value);
             }));
 
-            // Cria o livro no banco de dados
             $livro = Livro::create($livroData);
-            // $livro = Livro::create([
-            //     'Titulo' => $data['Titulo'],
-            //     'Editora' => $data['Editora'],
-            //     'Edicao' => $data['Edicao'],
-            //     'AnoPublicacao' => $data['AnoPublicacao'],
-            //     'preco' => $data['preco']
-            // ]);
 
             // Se houver 'Autor_CodAu', criar a relação com o autor
             if (isset($data['Autor_CodAu'])) {
