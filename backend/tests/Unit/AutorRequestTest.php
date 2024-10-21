@@ -14,7 +14,7 @@ class AutorRequestTest extends TestCase
      */
     public function nome_e_obrigatorio()
     {
-        $response = $this->postJson('/autores', [
+        $response = $this->postJson('/api/autores', [
             'Nome' => '', // Campo vazio
         ]);
 
@@ -31,7 +31,7 @@ class AutorRequestTest extends TestCase
      */
     public function nome_nao_pode_exceder_40_caracteres()
     {
-        $response = $this->postJson('/autores', [
+        $response = $this->postJson('/api/autores', [
             'Nome' => str_repeat('a', 41), // Mais de 40 caracteres
         ]);
 

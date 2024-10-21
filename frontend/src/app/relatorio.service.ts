@@ -8,7 +8,7 @@ import { Relatorio } from './relatorio.model';
 })
 export class RelatorioService {
 
-  private apiUrl = 'http://127.0.0.1:8000/relatorio';
+  private apiUrl = 'http://127.0.0.1:8000/api/relatorio';
 
   constructor(private http: HttpClient) { }
 

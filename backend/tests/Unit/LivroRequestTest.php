@@ -15,7 +15,7 @@ class LivroRequestTest extends TestCase
      */
     public function titulo_e_obrigatorio()
     {
-        $response = $this->postJson('/livros', [
+        $response = $this->postJson('/api/livros', [
             'Titulo' => '', // Campo vazio
             'Editora' => 'Editora X',
             'Edicao' => 1,
@@ -35,7 +35,7 @@ class LivroRequestTest extends TestCase
      */
     public function titulo_nao_pode_exceder_40_caracteres()
     {
-        $response = $this->postJson('/livros', [
+        $response = $this->postJson('/api/livros', [
             'Titulo' => str_repeat('a', 41), // Mais de 40 caracteres
             'Editora' => 'Editora X',
             'Edicao' => 1,
@@ -55,7 +55,7 @@ class LivroRequestTest extends TestCase
      */
     public function editora_e_obrigatoria()
     {
-        $response = $this->postJson('/livros', [
+        $response = $this->postJson('/api/livros', [
             'Titulo' => 'Livro X',
             'Editora' => '', // Campo vazio
             'Edicao' => 1,
@@ -75,7 +75,7 @@ class LivroRequestTest extends TestCase
      */
     public function editora_nao_pode_exceder_40_caracteres()
     {
-        $response = $this->postJson('/livros', [
+        $response = $this->postJson('/api/livros', [
             'Titulo' => 'Livro X',
             'Editora' => str_repeat('a', 41), // Mais de 40 caracteres
             'Edicao' => 1,
@@ -95,7 +95,7 @@ class LivroRequestTest extends TestCase
      */
     public function edicao_deve_ser_inteiro()
     {
-        $response = $this->postJson('/livros', [
+        $response = $this->postJson('/api/livros', [
             'Titulo' => 'Livro X',
             'Editora' => 'Editora X',
             'Edicao' => 'um', // Valor não inteiro
@@ -115,7 +115,7 @@ class LivroRequestTest extends TestCase
      */
     public function edicao_deve_ser_maior_ou_igual_a_1()
     {
-        $response = $this->postJson('/livros', [
+        $response = $this->postJson('/api/livros', [
             'Titulo' => 'Livro X',
             'Editora' => 'Editora X',
             'Edicao' => 0, // Valor menor que 1
@@ -135,7 +135,7 @@ class LivroRequestTest extends TestCase
      */
     public function ano_publicacao_deve_ter_4_digitos()
     {
-        $response = $this->postJson('/livros', [
+        $response = $this->postJson('/api/livros', [
             'Titulo' => 'Livro X',
             'Editora' => 'Editora X',
             'Edicao' => 1,
@@ -155,7 +155,7 @@ class LivroRequestTest extends TestCase
      */
     public function ano_publicacao_deve_ser_numero_valido()
     {
-        $response = $this->postJson('/livros', [
+        $response = $this->postJson('/api/livros', [
             'Titulo' => 'Livro X',
             'Editora' => 'Editora X',
             'Edicao' => 1,

@@ -41,7 +41,7 @@ class LivroControllerTest extends TestCase
             'AnoPublicacao' => '2023'
         ];
 
-        $response = $this->postJson('/livros', $dados);
+        $response = $this->postJson('/api/livros', $dados);
 
         $response->assertStatus(201);
         $this->assertDatabaseHas('livro', [
@@ -62,7 +62,7 @@ class LivroControllerTest extends TestCase
         ];
 
         // Faz uma requisição POST para tentar criar o livro com dados incompletos
-        $response = $this->postJson('/livros', $dadosIncompletos);
+        $response = $this->postJson('/api/livros', $dadosIncompletos);
 
         $response->assertStatus(422);
         $response->assertJsonValidationErrors(['Titulo', 'Editora']);
@@ -86,7 +86,7 @@ class LivroControllerTest extends TestCase
             'AnoPublicacao' => '2021'
         ]);
 
-        $response = $this->getJson('/livros');
+        $response = $this->getJson('/api/livros');
 
         $response->assertStatus(200);
         $response->assertJsonCount(2);
@@ -115,7 +115,7 @@ class LivroControllerTest extends TestCase
             'AnoPublicacao' => '2020'
         ]);
 
-        $response = $this->getJson("/livros/{$livro->Codl}");
+        $response = $this->getJson("/api/livros/{$livro->Codl}");
 
         $response->assertStatus(200);
         $response->assertJsonFragment([
@@ -129,7 +129,7 @@ class LivroControllerTest extends TestCase
     /** @test */
     public function deve_retornar_erro_404_se_livro_nao_existir()
     {
-        $response = $this->getJson("/livros/999");
+        $response = $this->getJson("/api/livros/999");
         $response->assertStatus(404);
     }
 
@@ -152,7 +152,7 @@ class LivroControllerTest extends TestCase
             'AnoPublicacao' => '2021'
         ];
 
-        $response = $this->putJson('/livros', $dadosAtualizados);
+        $response = $this->putJson('/api/livros', $dadosAtualizados);
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('livro', [
@@ -176,7 +176,7 @@ class LivroControllerTest extends TestCase
             'AnoPublicacao' => '2020'
         ];
 
-        $response = $this->putJson('/livros', $dadosAtualizados);
+        $response = $this->putJson('/api/livros', $dadosAtualizados);
 
         $response->assertStatus(404);
     }
@@ -192,7 +192,7 @@ class LivroControllerTest extends TestCase
             'AnoPublicacao' => '2020'
         ]);
 
-        $response = $this->deleteJson("/livros/{$livro->Codl}");
+        $response = $this->deleteJson("/api/livros/{$livro->Codl}");
 
         $response->assertStatus(200);
         $this->assertDatabaseMissing('livro', ['Codl' => $livro->Codl]);
@@ -201,7 +201,7 @@ class LivroControllerTest extends TestCase
     /** @test */
     public function deve_retornar_erro_404_ao_deletar_livro_inexistente()
     {
-        $response = $this->deleteJson('/livros/999');
+        $response = $this->deleteJson('/api/livros/999');
         $response->assertStatus(404);
     }
 
@@ -224,7 +224,7 @@ class LivroControllerTest extends TestCase
             'Assunto_codAs' => $assunto->codAs
         ];
 
-        $response = $this->postJson("/livros/{$livro->Codl}/assuntos", $dadosAssociacao);
+        $response = $this->postJson("/api/livros/{$livro->Codl}/assuntos", $dadosAssociacao);
 
         $response->assertStatus(201);
         $this->assertDatabaseHas('livro_assunto', [
@@ -246,7 +246,7 @@ class LivroControllerTest extends TestCase
             'Assunto_codAs' => $assunto->codAs
         ];
 
-        $response = $this->postJson("/livros/999/assuntos", $dadosAssociacao);
+        $response = $this->postJson("/api/livros/999/assuntos", $dadosAssociacao);
         $response->assertStatus(500);
     }
 
@@ -266,7 +266,7 @@ class LivroControllerTest extends TestCase
             'Assunto_codAs' => 999 // Assunto inexistente
         ];
 
-        $response = $this->postJson("/livros/{$livro->Codl}/assuntos", $dadosAssociacao);
+        $response = $this->postJson("/api/livros/{$livro->Codl}/assuntos", $dadosAssociacao);
         $response->assertStatus(422);
     }
 
@@ -295,7 +295,7 @@ class LivroControllerTest extends TestCase
             'Assunto_codAs' => $assunto->codAs
         ]);
 
-        $response = $this->deleteJson("/livros/{$livro->Codl}/assunto/{$assunto->codAs}");
+        $response = $this->deleteJson("/api/livros/{$livro->Codl}/assunto/{$assunto->codAs}");
 
         $response->assertStatus(200);
         $this->assertDatabaseMissing('livro_assunto', [
@@ -318,7 +318,7 @@ class LivroControllerTest extends TestCase
             'Descricao' => 'Assunto Teste'
         ]);
 
-        $response = $this->deleteJson("/livros/{$livro->Codl}/assunto/{$assunto->codAs}");
+        $response = $this->deleteJson("/api/livros/{$livro->Codl}/assunto/{$assunto->codAs}");
 
         $response->assertStatus(404);
         $response->assertJson([
@@ -334,7 +334,7 @@ class LivroControllerTest extends TestCase
             'Descricao' => 'Assunto Teste'
         ]);
 
-        $response = $this->deleteJson("/livros/999/assunto/{$assunto->codAs}");
+        $response = $this->deleteJson("/api/livros/999/assunto/{$assunto->codAs}");
 
         $response->assertStatus(404);
         $response->assertJson([
@@ -360,7 +360,7 @@ class LivroControllerTest extends TestCase
             'Autor_CodAu' => $autor->CodAu
         ];
 
-        $response = $this->postJson("/livros/{$livro->Codl}/autores", $dadosAssociacao);
+        $response = $this->postJson("/api/livros/{$livro->Codl}/autores", $dadosAssociacao);
 
         $response->assertStatus(201);
         $this->assertDatabaseHas('livro_autor', [
@@ -392,7 +392,7 @@ class LivroControllerTest extends TestCase
             'Autor_CodAu' => $autor->CodAu
         ];
 
-        $response = $this->postJson("/livros/{$livro->Codl}/autores", $dadosAssociacao);
+        $response = $this->postJson("/api/livros/{$livro->Codl}/autores", $dadosAssociacao);
 
         $response->assertStatus(201);
     }
@@ -412,7 +412,7 @@ class LivroControllerTest extends TestCase
             'Autor_CodAu' => 999 // Autor inexistente
         ];
 
-        $response = $this->postJson("/livros/{$livro->Codl}/autores", $dadosAssociacao);
+        $response = $this->postJson("/api/livros/{$livro->Codl}/autores", $dadosAssociacao);
 
         $response->assertStatus(422);
         $response->assertJson([
@@ -432,7 +432,7 @@ class LivroControllerTest extends TestCase
             'Autor_CodAu' => $autor->CodAu
         ];
 
-        $response = $this->postJson("/livros/999/autores", $dadosAssociacao); // Livro inexistente
+        $response = $this->postJson("/api/livros/999/autores", $dadosAssociacao); // Livro inexistente
         $response->assertStatus(500);
     }
 
@@ -455,7 +455,7 @@ class LivroControllerTest extends TestCase
             'Autor_CodAu' => $autor->CodAu
         ]);
 
-        $response = $this->deleteJson("/livros/{$livro->Codl}/autor/{$autor->CodAu}");
+        $response = $this->deleteJson("/api/livros/{$livro->Codl}/autor/{$autor->CodAu}");
 
         $response->assertStatus(200);
         $this->assertDatabaseMissing('livro_autor', [
@@ -478,7 +478,7 @@ class LivroControllerTest extends TestCase
             'Nome' => 'Autor Teste'
         ]);
 
-        $response = $this->deleteJson("/livros/{$livro->Codl}/autor/{$autor->CodAu}");
+        $response = $this->deleteJson("/api/livros/{$livro->Codl}/autor/{$autor->CodAu}");
 
         $response->assertStatus(404);
         $response->assertJson([
@@ -497,7 +497,7 @@ class LivroControllerTest extends TestCase
             'AnoPublicacao' => '2020'
         ]);
 
-        $response = $this->deleteJson("/livros/{$livro->Codl}/autor/999"); // Autor inexistente
+        $response = $this->deleteJson("/api/livros/{$livro->Codl}/autor/999"); // Autor inexistente
 
         $response->assertStatus(404);
         $response->assertJson([
@@ -516,7 +516,7 @@ class LivroControllerTest extends TestCase
             'preco' => 59.90, // Preço definido
         ];
 
-        $response = $this->postJson('/livros', $dadosLivro);
+        $response = $this->postJson('/api/livros', $dadosLivro);
 
         $response->assertStatus(201);
         $this->assertDatabaseHas('livro', ['preco' => 59.90]);
@@ -533,7 +533,7 @@ class LivroControllerTest extends TestCase
             'preco' => null, // Preço não informado
         ];
 
-        $response = $this->postJson('/livros', $dadosLivro);
+        $response = $this->postJson('/api/livros', $dadosLivro);
 
         $response->assertStatus(201);
         $this->assertDatabaseHas('livro', ['preco' => null]);

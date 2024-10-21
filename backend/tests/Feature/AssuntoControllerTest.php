@@ -21,7 +21,7 @@ class AssuntoControllerTest extends TestCase
         Assunto::create(['Descricao' => 'Assunto 2']);
         Assunto::create(['Descricao' => 'Assunto 3']);
 
-        $response = $this->getJson('/assuntos');
+        $response = $this->getJson('/api/assuntos');
 
         $response->assertStatus(200);
         $this->assertCount(3, $response->json());
@@ -31,7 +31,7 @@ class AssuntoControllerTest extends TestCase
     public function lista_assuntos_retorna_vazio_quando_nao_ha_assuntos()
     {
         // Faz a requisição para o método index sem criar nenhum assunto
-        $response = $this->getJson('/assuntos');
+        $response = $this->getJson('/api/assuntos');
 
         $response->assertStatus(200);
         $this->assertEmpty($response->json());
@@ -40,7 +40,7 @@ class AssuntoControllerTest extends TestCase
     /** @test */
     public function cria_um_novo_assunto_com_sucesso()
     {
-        $response = $this->postJson('/assuntos', [
+        $response = $this->postJson('/api/assuntos', [
             'Descricao' => 'Assunto Teste',
         ]);
 
@@ -57,7 +57,7 @@ class AssuntoControllerTest extends TestCase
             'Descricao' => '',
         ];
 
-        $response = $this->postJson('/assuntos', $data);
+        $response = $this->postJson('/api/assuntos', $data);
 
         $response->assertStatus(422);
         $response->assertJsonValidationErrors(['Descricao']);
@@ -71,7 +71,7 @@ class AssuntoControllerTest extends TestCase
             'Descricao' => str_repeat('A', 41), // 41 caracteres
         ];
 
-        $response = $this->postJson('/assuntos', $data);
+        $response = $this->postJson('/api/assuntos', $data);
 
         $response->assertStatus(422);
         $response->assertJsonValidationErrors(['Descricao']);
@@ -83,7 +83,7 @@ class AssuntoControllerTest extends TestCase
         // Criar um assunto no banco de dados
         $assunto = Assunto::create(['Descricao' => 'Assunto Exemplo']);
 
-        $response = $this->getJson("/assuntos/{$assunto->codAs}");
+        $response = $this->getJson("/api/assuntos/{$assunto->codAs}");
 
         $response->assertStatus(200);
         $response->assertJsonFragment(['Descricao' => 'Assunto Exemplo']);
@@ -93,7 +93,7 @@ class AssuntoControllerTest extends TestCase
     public function nao_mostra_assunto_quando_o_id_nao_existir()
     {
         // Faz a requisição para o método show com um ID que não existe
-        $response = $this->getJson('/assuntos/9999'); // ID que não existe
+        $response = $this->getJson('/api/assuntos/9999'); // ID que não existe
 
         $response->assertStatus(404);
         $response->assertJson(['error' => 'Assunto não encontrado']);
@@ -112,7 +112,7 @@ class AssuntoControllerTest extends TestCase
             'Descricao' => 'Assunto Atualizado'
         ];
 
-        $response = $this->putJson("/assuntos", $dadosAtualizados);
+        $response = $this->putJson("/api/assuntos", $dadosAtualizados);
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('assunto', $dadosAtualizados);
@@ -127,7 +127,7 @@ class AssuntoControllerTest extends TestCase
             'Descricao' => 'Assunto Atualizado'
         ];
 
-        $response = $this->putJson('/assuntos', $dadosAtualizados);
+        $response = $this->putJson('/api/assuntos', $dadosAtualizados);
 
         $response->assertStatus(404);
         $response->assertJson(['error' => 'Assunto não encontrado']);
@@ -146,7 +146,7 @@ class AssuntoControllerTest extends TestCase
             'Descricao' => str_repeat('A', 41)
         ];
 
-        $response = $this->putJson("/assuntos", $dadosInvalidos);
+        $response = $this->putJson("/api/assuntos", $dadosInvalidos);
 
         $response->assertStatus(422);
         $response->assertJsonValidationErrors(['Descricao']);
@@ -159,7 +159,7 @@ class AssuntoControllerTest extends TestCase
             'Descricao' => 'Assunto Teste',
         ]);
 
-        $response = $this->deleteJson("/assuntos/{$assunto->codAs}");
+        $response = $this->deleteJson("/api/assuntos/{$assunto->codAs}");
 
         $response->assertStatus(200);
         $this->assertDatabaseMissing('assunto', ['codAs' => $assunto->codAs]);
@@ -168,7 +168,7 @@ class AssuntoControllerTest extends TestCase
     /** @test */
     public function tenta_excluir_assunto_nao_existente()
     {
-        $response = $this->deleteJson('/assuntos/9999');
+        $response = $this->deleteJson('/api/assuntos/9999');
 
         $response->assertStatus(404);
         $response->assertJson(['error' => 'Assunto não encontrado']);
@@ -186,7 +186,7 @@ class AssuntoControllerTest extends TestCase
             'Descricao' => 'Assunto Teste',
         ]);
 
-        $response = $this->deleteJson("/assuntos/{$assunto->codAs}");
+        $response = $this->deleteJson("/api/assuntos/{$assunto->codAs}");
         $response->assertStatus(500);
     }
 
@@ -207,7 +207,7 @@ class AssuntoControllerTest extends TestCase
             'Assunto_codAs' => $assunto->codAs,
         ];
 
-        $response = $this->postJson("/assuntos/{$assunto->codAs}/livros", $dadosAssociacao);
+        $response = $this->postJson("/api/assuntos/{$assunto->codAs}/livros", $dadosAssociacao);
 
         $response->assertStatus(200);
         $response->assertJson(['message' => 'Livro associado ao Assunto com sucesso.']);
@@ -231,7 +231,7 @@ class AssuntoControllerTest extends TestCase
             'Assunto_codAs' => 9999, // ID de assunto que não existe
         ];
 
-        $response = $this->postJson('/assuntos/9999/livros', $dadosAssociacao);
+        $response = $this->postJson('/api/assuntos/9999/livros', $dadosAssociacao);
 
         $response->assertStatus(500);
     }
@@ -249,7 +249,7 @@ class AssuntoControllerTest extends TestCase
             'Assunto_codAs' => $assunto->codAs,
         ];
 
-        $response = $this->postJson("/assuntos/{$assunto->codAs}/livros", $dadosAssociacao);
+        $response = $this->postJson("/api/assuntos/{$assunto->codAs}/livros", $dadosAssociacao);
 
         $response->assertStatus(422);
         $response->assertJsonValidationErrors('Livro_codl');
@@ -272,7 +272,7 @@ class AssuntoControllerTest extends TestCase
             'Assunto_codAs' => $assunto->codAs,
         ]);
 
-        $response = $this->deleteJson("/assuntos/{$assunto->codAs}/livros/{$livro->Codl}");
+        $response = $this->deleteJson("/api/assuntos/{$assunto->codAs}/livros/{$livro->Codl}");
 
         $response->assertStatus(200);
         $response->assertJson(['message' => 'Livro desassociado do Assunto com sucesso.']);
@@ -294,7 +294,7 @@ class AssuntoControllerTest extends TestCase
             'AnoPublicacao' => '1954',
         ]);
 
-        $response = $this->deleteJson("/assuntos/{$assunto->codAs}/livros/{$livro->Codl}");
+        $response = $this->deleteJson("/api/assuntos/{$assunto->codAs}/livros/{$livro->Codl}");
 
         $response->assertStatus(404);
         $response->assertJson(['message' => 'Associação não encontrada.']);
@@ -311,7 +311,7 @@ class AssuntoControllerTest extends TestCase
             'AnoPublicacao' => '1954',
         ]);
 
-        $response = $this->deleteJson("/assuntos/9999/livros/{$livro->Codl}");
+        $response = $this->deleteJson("/api/assuntos/9999/livros/{$livro->Codl}");
 
         $response->assertStatus(404);
         $response->assertJson(['message' => 'Associação não encontrada.']);
@@ -323,7 +323,7 @@ class AssuntoControllerTest extends TestCase
         // Criar um assunto
         $assunto = Assunto::create(['Descricao' => 'Assunto Teste']);
 
-        $response = $this->deleteJson("/assuntos/{$assunto->codAs}/livros/9999");
+        $response = $this->deleteJson("/api/assuntos/{$assunto->codAs}/livros/9999");
 
         $response->assertStatus(404);
         $response->assertJson(['message' => 'Associação não encontrada.']);

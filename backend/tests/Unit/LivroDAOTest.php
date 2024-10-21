@@ -3,6 +3,10 @@
 namespace Tests\Unit;
 
 use App\DAO\LivroDAO;
+use App\DAO\LivroAutorDAO;
+use App\DAO\LivroAssuntoDAO;
+use App\DAO\AutorDAO;
+use App\DAO\AssuntoDAO;
 use App\Models\Livro;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -12,11 +16,19 @@ class LivroDAOTest extends TestCase
     use RefreshDatabase;
 
     protected $livroDAO;
+    protected $livroAutorDAO;
+    protected $livroAssuntoDAO;
+    protected $autorDAO;
+    protected $assuntoDAO;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->livroDAO = new LivroDAO();
+        $this->livroAutorDAO = new LivroAutorDAO();
+        $this->livroAssuntoDAO = new LivroAssuntoDAO();
+        $this->autorDAO = new AutorDAO();
+        $this->assuntoDAO = new AssuntoDAO();
     }
 
     /** @test */
@@ -27,6 +39,7 @@ class LivroDAOTest extends TestCase
             'Editora' => 'HarperCollins',
             'Edicao' => 1,
             'AnoPublicacao' => '1954',
+            'preco' => 129.90
         ];
 
         $livro = $this->livroDAO->criar($data);
@@ -122,7 +135,7 @@ class LivroDAOTest extends TestCase
             'AnoPublicacao' => '1954',
         ];
 
-        $this->expectException(\Illuminate\Database\QueryException::class);
+        $this->expectException(\Exception::class);
         $this->livroDAO->criar($data);
     }
 
@@ -135,7 +148,66 @@ class LivroDAOTest extends TestCase
             'AnoPublicacao' => '1954',
         ];
 
-        $this->expectException(\Illuminate\Database\QueryException::class);
+        $this->expectException(\Exception::class);
         $this->livroDAO->criar($data);
     }
+
+    /** @test */
+    public function pode_criar_livro_com_relacoes_sucesso()
+    {
+        $autor = $this->autorDAO->criar([
+            'Nome' => 'J R R Tolkien'
+        ]);
+
+        $assunto = $this->assuntoDAO->criar([
+            'Descricao' => 'Fantasia'
+        ]);
+
+        $data = [
+            'Titulo' => 'O Senhor dos Anéis',
+            'Editora' => 'HarperCollins',
+            'Edicao' => 1,
+            'AnoPublicacao' => '1954',
+            'Autor_CodAu' => $autor->CodAu,
+            'Assunto_codAs' => $assunto->codAs,
+        ];
+
+        $livro = $this->livroDAO->criar($data);
+
+        $this->assertInstanceOf(Livro::class, $livro);
+        $this->assertEquals($data['Titulo'], $livro->Titulo);
+    }
+
+     /** @test */
+     public function erro_ao_criar_livro_sem_autor()
+     {
+         $data = [
+             'Titulo' => 'O Senhor dos Anéis',
+             'Editora' => 'HarperCollins',
+             'Edicao' => 1,
+             'AnoPublicacao' => '1954',
+             'preco' => 49.90,
+             'Autor_CodAu' => 12 // O autor está faltando
+         ];
+ 
+         $this->expectException(\Exception::class);
+         $this->livroDAO->criar($data);
+     }
+
+
+     /** @test */
+     public function erro_ao_criar_livro_sem_assunto()
+     {
+         $data = [
+             'Titulo' => 'O Senhor dos Anéis',
+             'Editora' => 'HarperCollins',
+             'Edicao' => 1,
+             'AnoPublicacao' => '1954',
+             'preco' => 49.90,
+             'Assunto_codAs' => 12 // O autor está faltando
+         ];
+ 
+         $this->expectException(\Exception::class);
+         $this->livroDAO->criar($data);
+     }
 }

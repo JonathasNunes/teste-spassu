@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import * as bootstrap from 'bootstrap';
 import { RelatorioService } from './relatorio.service';
 import { Relatorio } from './relatorio.model';
@@ -50,7 +50,12 @@ export class AppComponent implements OnInit {
     console.log('Cadastrando Autor:', this.autor.Nome);
     // // Lógica de cadastro pode ser feita aqui (chamada para API, etc.)
     // this.fecharModal('modalAutor');
-    this.http.post('http://127.0.0.1:8000/autores', this.autor)
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',  // Ajuste para seu backend
+      'Accept': 'application/json',
+    });
+
+    this.http.post('http://127.0.0.1:8000/api/autores', this.autor, { headers })
       .subscribe(response => {
         console.log('Autor cadastrado com sucesso:', response);
         this.fecharModal('modalAutor');
@@ -61,7 +66,12 @@ export class AppComponent implements OnInit {
     console.log('Cadastrando Assunto:', this.assunto.Descricao);
     // Lógica de cadastro pode ser feita aqui (chamada para API, etc.)
     // this.fecharModal('modalAssunto');
-    this.http.post('http://127.0.0.1:8000/assuntos', this.assunto)
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',  // Ajuste para seu backend
+      'Accept': 'application/json',
+    });
+
+    this.http.post('http://127.0.0.1:8000/api/assuntos', this.assunto, { headers })
       .subscribe(response => {
         console.log('Assunto cadastrado com sucesso:', response);
         this.fecharModal('modalAssunto');

@@ -14,7 +14,7 @@ class AssuntoRequestTest extends TestCase
      */
     public function descricao_e_obrigatorio()
     {
-        $response = $this->postJson('/assuntos', [
+        $response = $this->postJson('/api/assuntos', [
             'Descricao' => '', // Campo vazio
         ]);
 
@@ -31,7 +31,7 @@ class AssuntoRequestTest extends TestCase
      */
     public function descricao_nao_pode_exceder_40_caracteres()
     {
-        $response = $this->postJson('/assuntos', [
+        $response = $this->postJson('/api/assuntos', [
             'Descricao' => str_repeat('a', 41), // Mais de 40 caracteres
         ]);
 

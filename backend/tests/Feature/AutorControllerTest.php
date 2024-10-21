@@ -22,13 +22,11 @@ class AutorControllerTest extends TestCase
         Autor::create(['Nome' => 'Autor 3']);
 
         // Fazer a requisição GET para a rota /autores
-        $response = $this->getJson('/autores');
-// dd($response);
-        // Verificar se o status da resposta é 200
+        $response = $this->getJson('/api/autores');
+
         $response->assertStatus(200);
 
         // Verificar se os dados dos autores estão presentes na resposta
-        // $response->assertJsonCount(3, 'data'); // Espera 3 autores na resposta
         $response->assertJsonFragment(['Nome' => 'Autor 1']);
         $response->assertJsonFragment(['Nome' => 'Autor 2']);
         $response->assertJsonFragment(['Nome' => 'Autor 3']);
@@ -44,7 +42,7 @@ class AutorControllerTest extends TestCase
         });
 
         // Fazer a requisição GET para a rota /autores
-        $response = $this->getJson('/autores');
+        $response = $this->getJson('/api/autores');
 
         // Verificar se o status da resposta é 500
         $response->assertStatus(500)
@@ -66,7 +64,7 @@ class AutorControllerTest extends TestCase
         ];
 
         // Fazer a requisição POST para a rota /autores
-        $response = $this->postJson('/autores', $data);
+        $response = $this->postJson('/api/autores', $data);
 
         // Verificar se o status da resposta é 201 (Created)
         $response->assertStatus(201);
@@ -85,7 +83,7 @@ class AutorControllerTest extends TestCase
         ];
 
         // Fazer a requisição POST para a rota /autores
-        $response = $this->postJson('/autores', $data);
+        $response = $this->postJson('/api/autores', $data);
 
         // Verificar se o status da resposta é 422 (Unprocessable Entity)
         $response->assertStatus(422);
@@ -103,7 +101,7 @@ class AutorControllerTest extends TestCase
         ]);
 
         // Fazer a requisição GET para a rota /autores/{id}
-        $response = $this->getJson("/autores/{$autor->CodAu}");
+        $response = $this->getJson("/api/autores/{$autor->CodAu}");
 
         // Verificar se o status da resposta é 200 (OK)
         $response->assertStatus(200);
@@ -119,7 +117,7 @@ class AutorControllerTest extends TestCase
     public function retorna_erro_autor_nao_encontrado()
     {
         // Tentar obter um autor que não existe
-        $response = $this->getJson("/autores/9999"); // ID que não existe
+        $response = $this->getJson("/api/autores/9999"); // ID que não existe
 
         $response->assertStatus(404);
         $response->assertJson(['error' => 'Autor não encontrado']);
@@ -137,7 +135,7 @@ class AutorControllerTest extends TestCase
             'Nome' => 'Autor Teste Atualizado',
         ];
 
-        $response = $this->putJson("/autores", $dadosAtualizados);
+        $response = $this->putJson("/api/autores", $dadosAtualizados);
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('autor', $dadosAtualizados);
@@ -152,7 +150,7 @@ class AutorControllerTest extends TestCase
             'Nome' => 'Autor Inexistente',
         ];
 
-        $response = $this->putJson("/autores", $dadosAtualizados);
+        $response = $this->putJson("/api/autores", $dadosAtualizados);
 
         $response->assertStatus(404);
         $response->assertJson(['error' => 'Autor não encontrado']);
@@ -170,7 +168,7 @@ class AutorControllerTest extends TestCase
             'Nome' => '',
         ];
 
-        $response = $this->putJson("/autores", $dadosInvalidos);
+        $response = $this->putJson("/api/autores", $dadosInvalidos);
 
         $response->assertStatus(422);
         $response->assertJsonValidationErrors(['Nome']);
@@ -183,7 +181,7 @@ class AutorControllerTest extends TestCase
             'Nome' => 'Autor Teste',
         ]);
 
-        $response = $this->deleteJson("/autores/{$autor->CodAu}");
+        $response = $this->deleteJson("/api/autores/{$autor->CodAu}");
 
         $response->assertStatus(200);
         $this->assertDatabaseMissing('autor', ['CodAu' => $autor->CodAu]);
@@ -192,7 +190,7 @@ class AutorControllerTest extends TestCase
     /** @test */
     public function tenta_excluir_autor_nao_existente()
     {
-        $response = $this->deleteJson('/autores/9999');
+        $response = $this->deleteJson('/api/autores/9999');
 
         $response->assertStatus(404);
         $response->assertJson(['error' => 'Autor não encontrado']);
@@ -210,7 +208,7 @@ class AutorControllerTest extends TestCase
             'Nome' => 'Autor Teste',
         ]);
 
-        $response = $this->deleteJson("/autores/{$autor->CodAu}");
+        $response = $this->deleteJson("/api/autores/{$autor->CodAu}");
         $response->assertStatus(500)
                 ->assertJsonStructure([
                     'message',
@@ -241,7 +239,7 @@ class AutorControllerTest extends TestCase
             'livro_codl' => $livro->Codl,
         ];
 
-        $response = $this->postJson("/autores/{$autor->CodAu}/livros", $dados);
+        $response = $this->postJson("/api/autores/{$autor->CodAu}/livros", $dados);
 
         $response->assertStatus(201);
         $response->assertJson(['message' => 'Livro associado ao autor com sucesso.']);
@@ -262,7 +260,7 @@ class AutorControllerTest extends TestCase
             'livro_codl' => 9999, // Código de livro que não existe
         ];
 
-        $response = $this->postJson("/autores/{$autor->CodAu}/livros", $dados);
+        $response = $this->postJson("/api/autores/{$autor->CodAu}/livros", $dados);
 
         $response->assertStatus(422);
         $response->assertJsonValidationErrors('livro_codl');
@@ -276,7 +274,7 @@ class AutorControllerTest extends TestCase
             'Nome' => 'Autor Teste',
         ]);
 
-        $response = $this->postJson("/autores/{$autor->CodAu}/livros", []);
+        $response = $this->postJson("/api/autores/{$autor->CodAu}/livros", []);
 
         $response->assertStatus(422);
         $response->assertJsonValidationErrors('livro_codl');
@@ -306,7 +304,7 @@ class AutorControllerTest extends TestCase
             'livro_codl' => $livro->Codl,
         ];
 
-        $response = $this->postJson("/autores/{$autor->CodAu}/livros", $dados);
+        $response = $this->postJson("/api/autores/{$autor->CodAu}/livros", $dados);
 
         $response->assertStatus(500);
         $response->assertJson(['message' => 'Erro ao associar livro ao autor: Erro inesperado']);
@@ -334,7 +332,7 @@ class AutorControllerTest extends TestCase
             'Autor_CodAu' => $autor->CodAu,
         ]);
 
-        $response = $this->deleteJson("/autores/{$autor->CodAu}/livros/{$livro->Codl}");
+        $response = $this->deleteJson("/api/autores/{$autor->CodAu}/livros/{$livro->Codl}");
 
         $response->assertStatus(200);
 
@@ -360,7 +358,7 @@ class AutorControllerTest extends TestCase
             'AnoPublicacao' => '1954',
         ]);
 
-        $response = $this->deleteJson("/autores/{$autor->CodAu}/livros/{$livro->Codl}");
+        $response = $this->deleteJson("/api/autores/{$autor->CodAu}/livros/{$livro->Codl}");
 
         $response->assertStatus(404);
         $response->assertJson(['message' => 'Associação não encontrada.']);
@@ -386,7 +384,7 @@ class AutorControllerTest extends TestCase
             'AnoPublicacao' => '1954',
         ]);
 
-        $response = $this->deleteJson("/autores/{$autor->CodAu}/livros/{$livro->Codl}");
+        $response = $this->deleteJson("/api/autores/{$autor->CodAu}/livros/{$livro->Codl}");
 
         $response->assertStatus(500);
         $response->assertJson(['message' => 'Erro ao desassociar livro do autor: Erro inesperado']);
@@ -401,7 +399,7 @@ class AutorControllerTest extends TestCase
         ]);
 
         // Fazer a requisição para buscar o autor pelo nome
-        $response = $this->getJson("/autores/buscar/nome/Autor%20Teste");
+        $response = $this->getJson("/api/autores/buscar/nome/Autor%20Teste");
 
         $response->assertStatus(200);
         $response->assertJsonFragment(['Nome' => 'Autor Teste']);
@@ -411,7 +409,7 @@ class AutorControllerTest extends TestCase
     public function busca_autor_por_nome_nao_existente()
     {
         // Fazer a requisição para buscar um autor que não existe
-        $response = $this->getJson("/autores/buscar/nome/NomeInexistente");
+        $response = $this->getJson("/api/autores/buscar/nome/NomeInexistente");
 
         $response->assertStatus(200);
         $response->assertJson([]);
