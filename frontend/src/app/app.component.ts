@@ -4,6 +4,7 @@ import * as bootstrap from 'bootstrap';
 import { RelatorioService } from './relatorio.service';
 import { Relatorio } from './relatorio.model';
 import { LivroCreateComponent } from './livro-create.component';
+import { ReportService } from './report.service';
 
 @Component({
   selector: 'app-root',
@@ -26,11 +27,15 @@ export class AppComponent implements OnInit {
 
   constructor(
     private http: HttpClient, 
-    private relatorioService: RelatorioService
+    private relatorioService: RelatorioService,
+    private reportService: ReportService
   ) { }
 
   ngOnInit(): void {
     this.fetchRelatorios();
+    this.reportService.updateReport$.subscribe(() => {
+      this.fetchRelatorios();
+    });
   }
 
   fetchRelatorios(): void {
@@ -62,6 +67,7 @@ export class AppComponent implements OnInit {
       .subscribe(response => {
         console.log('Autor cadastrado com sucesso:', response);
         this.fecharModal('modalAutor');
+        this.autor.Nome = '';
       });
   }
 
@@ -75,6 +81,7 @@ export class AppComponent implements OnInit {
       .subscribe(response => {
         console.log('Assunto cadastrado com sucesso:', response);
         this.fecharModal('modalAssunto');
+        this.assunto.Descricao = '';
       });
   }
 
@@ -89,7 +96,11 @@ export class AppComponent implements OnInit {
     }
   }
 
-  // Abrir modal
+   // Ouve o evento para fechar a modal e atualiza a lista
+   onCloseLivroModal() {
+    this.fecharModal('modalLivro');
+  }
+
   openModal(tipo: string) {
     const modalId = tipo === 'autor' ? 'modalAutor' : 'modalAssunto';
     const modal = document.getElementById(modalId);
@@ -99,7 +110,6 @@ export class AppComponent implements OnInit {
     }
   }
 
-  // Fechar modal
   fecharModal(modalId: string) {
     const modal = document.getElementById(modalId);
     if (modal) {

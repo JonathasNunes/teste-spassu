@@ -1,5 +1,5 @@
 // livro.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Livro } from './livro.model';
@@ -7,34 +7,37 @@ import { AutorService } from './autor.service';
 import { Autor } from './autor.model';
 import { AssuntoService } from './assunto.service';
 import { Assunto } from './assunto.model';
+import { ReportService } from './report.service';
 
 @Component({
   selector: 'app-livro-create',
   templateUrl: './livro-create.component.html'
 })
 export class LivroCreateComponent implements OnInit {
+  @Output() closeModalEvent = new EventEmitter<void>();  // Emite um evento para fechar a modal
   livroForm: FormGroup;
   autores: Autor[] = [];
   assuntos: Assunto[] = [];
+  mensagemErro: string = '';
 
   constructor(
     private http: HttpClient,
     private fb: FormBuilder,
     private autorService: AutorService,
-    private assuntoService: AssuntoService
+    private assuntoService: AssuntoService,
+    private reportService: ReportService
   ) {
     this.livroForm = this.fb.group({
       Titulo: ['', Validators.required],
       Editora: ['', Validators.required],
       Edicao: [1, [Validators.required, Validators.min(1)]],
-      AnoPublicacao: [new Date().getFullYear(), [
-        Validators.required,
+      AnoPublicacao: [new Date().getFullYear().toString(), [
         Validators.min(1000),
         Validators.max(new Date().getFullYear()),
         Validators.minLength(4),
         Validators.maxLength(4)
       ]],
-      preco: [null, [Validators.required, Validators.min(0)]],
+      preco: [null, [Validators.min(0)]],
       Autor_CodAu: ['', Validators.required],
       Assunto_codAs: ['', Validators.required]
     });
@@ -100,9 +103,6 @@ export class LivroCreateComponent implements OnInit {
   onSubmit() {
     if (this.livroForm.valid) {
       const livro: Livro = this.livroForm.value;
-   
-      console.log(' --- LIVRO ANTES DO ENVIO --- ');
-      console.log(livro);
 
       const headers = new HttpHeaders({
         'Content-Type': 'application/json',
@@ -110,10 +110,51 @@ export class LivroCreateComponent implements OnInit {
       });
   
       this.http.post('http://127.0.0.1:8000/api/livros', livro, { headers })
-        .subscribe(response => {
-          console.log('Livro cadastrado com sucesso:', response);
-          // this.fecharModal('modalAssunto');
-        });
+        .subscribe({
+          next: (response) => {
+            console.log('Livro cadastrado com sucesso:', response);
+            this.mensagemErro = '';
+            this.livroForm.reset({
+              Titulo: '', 
+              Editora: '',
+              Edicao: 1,
+              AnoPublicacao: new Date().getFullYear(),
+              preco: null,
+              Autor_CodAu: null,
+              Assunto_codAs: null
+            });
+            this.reportService.notifyReportUpdate(); // Notificar o componente principal para atualizar o relatório
+            this.closeModalEvent.emit();
+        },
+        error: (errorResponse) => {
+          if (errorResponse.status === 422) {
+            this.mostrarErrosValidacao(errorResponse.error.errors);
+          } else if (errorResponse.status === 404) {
+            this.mostrarErroGenerico('Erro 404: Livro não encontrado ou recurso não disponível.');
+          } else if (errorResponse.status === 500) {
+            this.mostrarErroGenerico('Erro 500: Falha no servidor.');
+          } else {// Outros erros
+            this.mostrarErroGenerico('Erro desconhecido:' + errorResponse.errorMessage);
+          }
+        }
+      });
+    } else {
+      this.livroForm.markAllAsTouched();
+      return;
     }
+  }
+
+  mostrarErrosValidacao(erros: any) {
+    const mensagensErro = [];
+    for (const campo in erros) {
+      if (erros.hasOwnProperty(campo)) {
+        mensagensErro.push(...erros[campo]);
+      }
+    }
+    this.mensagemErro = mensagensErro.join(' ');
+  }
+  
+  mostrarErroGenerico(mensagem: string) {
+    this.mensagemErro = mensagem;
   }
 }
