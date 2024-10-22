@@ -38,8 +38,8 @@ export class LivroCreateComponent implements OnInit {
         Validators.maxLength(4)
       ]],
       preco: [null, [Validators.min(0)]],
-      Autor_CodAu: ['', Validators.required],
-      Assunto_codAs: ['', Validators.required]
+      Autor_CodAu: [[], Validators.required],
+      Assunto_codAs: [[], Validators.required]
     });
   }
 
@@ -118,10 +118,10 @@ export class LivroCreateComponent implements OnInit {
               Titulo: '', 
               Editora: '',
               Edicao: 1,
-              AnoPublicacao: new Date().getFullYear(),
+              AnoPublicacao: new Date().getFullYear().toString(),
               preco: null,
-              Autor_CodAu: null,
-              Assunto_codAs: null
+              Autor_CodAu: [],
+              Assunto_codAs: []
             });
             this.reportService.notifyReportUpdate(); // Notificar o componente principal para atualizar o relatório
             this.closeModalEvent.emit();

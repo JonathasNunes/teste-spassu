@@ -8,23 +8,21 @@
   <form [formGroup]="livroForm" (ngSubmit)="onSubmit()">
     <div class="mb-3">
       <label for="Autor_CodAu" class="form-label">Autor *</label>
-      <select id="Autor_CodAu" class="form-select" formControlName="Autor_CodAu">
-        <option value="" disabled selected>Selecione um autor</option>
+      <select id="Autor_CodAu" class="form-select" formControlName="Autor_CodAu" multiple>
         <option *ngFor="let autor of autores" [value]="autor.CodAu">{{ autor.Nome }}</option>
       </select>
       <div *ngIf="livroForm.get('Autor_CodAu')?.touched && livroForm.get('Autor_CodAu')?.invalid" class="text-danger">
-        <small *ngIf="livroForm.get('Autor_CodAu')?.hasError('required')">Selecione um autor.</small>
+        <small *ngIf="livroForm.get('Autor_CodAu')?.hasError('required')">Selecione ao menos um autor.</small>
       </div>
     </div>
 
     <div class="mb-3">
       <label for="Assunto_codAs" class="form-label">Gênero *</label>
-      <select id="Assunto_codAs" class="form-select" formControlName="Assunto_codAs">
-        <option value="" disabled selected>Selecione um gênero</option>
+      <select id="Assunto_codAs" class="form-select" formControlName="Assunto_codAs" multiple>
         <option *ngFor="let assunto of assuntos" [value]="assunto.codAs">{{ assunto.Descricao }}</option>
       </select>
       <div *ngIf="livroForm.get('Assunto_codAs')?.touched && livroForm.get('Assunto_codAs')?.invalid" class="text-danger">
-        <small *ngIf="livroForm.get('Assunto_codAs')?.hasError('required')">Selecione um gênero.</small>
+        <small *ngIf="livroForm.get('Assunto_codAs')?.hasError('required')">Selecione ao menos um gênero.</small>
       </div>
     </div>
 

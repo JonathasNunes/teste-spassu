@@ -20,7 +20,6 @@ class LivroDAO
 
     public function criar(array $data): Livro
     {   
-        // return Livro::create($data);
         DB::beginTransaction();
 
         try {    
@@ -46,19 +45,23 @@ class LivroDAO
             $livro = Livro::create($livroData);
 
             // Se houver 'Autor_CodAu', criar a relação com o autor
-            if (isset($data['Autor_CodAu'])) {
-                $this->livroAutorDAO->criar([
-                    'Livro_Codl' => $livro->Codl,
-                    'Autor_CodAu' => $data['Autor_CodAu']
-                ]);
+            if (isset($data['Autor_CodAu']) && is_array($data['Autor_CodAu'])) {
+                foreach ($data['Autor_CodAu'] as $autorCodAu) {
+                    $this->livroAutorDAO->criar([
+                        'Livro_Codl' => $livro->Codl,
+                        'Autor_CodAu' => $autorCodAu
+                    ]);
+                }
             }
 
             // Se houver 'Assunto_codAs', criar a relação com o assunto
-            if (isset($data['Assunto_codAs'])) {
-                $this->livroAssuntoDAO->criar([
-                    'Livro_codl' => $livro->Codl,
-                    'Assunto_codAs' => $data['Assunto_codAs']
-                ]);
+            if (isset($data['Assunto_codAs']) && is_array($data['Assunto_codAs'])) {
+                foreach ($data['Assunto_codAs'] as $assuntoCodAs) {
+                    $this->livroAssuntoDAO->criar([
+                        'Livro_codl' => $livro->Codl,
+                        'Assunto_codAs' => $assuntoCodAs
+                    ]);
+                }
             }
 
             DB::commit();

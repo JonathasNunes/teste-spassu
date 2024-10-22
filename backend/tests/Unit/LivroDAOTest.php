@@ -168,8 +168,8 @@ class LivroDAOTest extends TestCase
             'Editora' => 'HarperCollins',
             'Edicao' => 1,
             'AnoPublicacao' => '1954',
-            'Autor_CodAu' => $autor->CodAu,
-            'Assunto_codAs' => $assunto->codAs,
+            'Autor_CodAu' => [$autor->CodAu],
+            'Assunto_codAs' => [$assunto->codAs],
         ];
 
         $livro = $this->livroDAO->criar($data);
@@ -187,7 +187,7 @@ class LivroDAOTest extends TestCase
              'Edicao' => 1,
              'AnoPublicacao' => '1954',
              'preco' => 49.90,
-             'Autor_CodAu' => 12 // O autor está faltando
+             'Autor_CodAu' => [12] // O autor está faltando
          ];
  
          $this->expectException(\Exception::class);
@@ -204,10 +204,74 @@ class LivroDAOTest extends TestCase
              'Edicao' => 1,
              'AnoPublicacao' => '1954',
              'preco' => 49.90,
-             'Assunto_codAs' => 12 // O autor está faltando
+             'Assunto_codAs' => [12] // O assunto está faltando
          ];
  
          $this->expectException(\Exception::class);
          $this->livroDAO->criar($data);
      }
+
+     /** @test */
+    public function pode_criar_livro_com_varios_autores()
+    {
+        $autor1 = $this->autorDAO->criar([
+            'Nome' => 'J R R Tolkien'
+        ]);
+        $autor2 = $this->autorDAO->criar([
+            'Nome' => 'G R R Martin'
+        ]);
+        $autor3 = $this->autorDAO->criar([
+            'Nome' => 'J K Rowlin'
+        ]);
+
+        $assunto = $this->assuntoDAO->criar([
+            'Descricao' => 'Fantasia'
+        ]);
+
+        $data = [
+            'Titulo' => 'O Senhor dos Anéis',
+            'Editora' => 'HarperCollins',
+            'Edicao' => 1,
+            'AnoPublicacao' => '1954',
+            'Autor_CodAu' => [$autor1->CodAu, $autor2->CodAu, $autor3->CodAu],
+            'Assunto_codAs' => [$assunto->codAs],
+        ];
+
+        $livro = $this->livroDAO->criar($data);
+
+        $this->assertInstanceOf(Livro::class, $livro);
+        $this->assertEquals($data['Titulo'], $livro->Titulo);
+    }
+
+    /** @test */
+    public function pode_criar_livro_com_varios_assuntos()
+    {
+        $autor = $this->autorDAO->criar([
+            'Nome' => 'J R R Tolkien'
+        ]);
+
+        $assunto1 = $this->assuntoDAO->criar([
+            'Descricao' => 'Fantasia'
+        ]);
+        $assunto2 = $this->assuntoDAO->criar([
+            'Descricao' => 'Ficção'
+        ]);
+        $assunto3 = $this->assuntoDAO->criar([
+            'Descricao' => 'Drama'
+        ]);
+
+        $data = [
+            'Titulo' => 'O Senhor dos Anéis',
+            'Editora' => 'HarperCollins',
+            'Edicao' => 1,
+            'AnoPublicacao' => '1954',
+            'Autor_CodAu' => [$autor->CodAu],
+            'Assunto_codAs' => [$assunto1->codAs, $assunto2->codAs, $assunto3->codAs],
+        ];
+
+        $livro = $this->livroDAO->criar($data);
+
+        $this->assertInstanceOf(Livro::class, $livro);
+        $this->assertEquals($data['Titulo'], $livro->Titulo);
+    }
 }
